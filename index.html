@@ -1,0 +1,2303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#10091f">
+<title>NEON DREAMVERSE | Minecraft Mod Universe</title>
+
+<style>
+:root {
+  --bg: #0b0715;
+  --panel: #151025;
+  --panel2: #1c1430;
+  --pink: #ff65d8;
+  --purple: #a879ff;
+  --cyan: #65edff;
+  --text: #f8f2ff;
+  --muted: #b9accb;
+  --border: rgba(204, 160, 255, .18);
+  --radius: 20px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 15% 0%, #32144c 0%, transparent 40%),
+    radial-gradient(ellipse at 100% 50%, #141d43 0%, transparent 35%),
+    var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+button, input, select, textarea {
+  font: inherit;
+}
+
+button, select {
+  cursor: pointer;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  color: var(--text);
+}
+
+.hidden {
+  display: none !important;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.small {
+  font-size: 12px;
+}
+
+.app {
+  min-height: 100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+  width: 245px;
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 20;
+  padding: 24px 16px;
+  background: rgba(12, 8, 25, .93);
+  border-right: 1px solid var(--border);
+  backdrop-filter: blur(18px);
+  display: flex;
+  flex-direction: column;
+}
+
+.brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 32px;
+  padding: 0 6px;
+}
+
+.brand-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 15px;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  background: linear-gradient(135deg, #ff65d8, #7c5cff, #65edff);
+  box-shadow: 0 0 28px #a879ff40;
+}
+
+.brand h1 {
+  font-size: 15px;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.brand p {
+  margin: 4px 0 0;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.nav-label {
+  margin: 15px 10px 8px;
+  color: #827494;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.nav-btn {
+  width: 100%;
+  border: 1px solid transparent;
+  border-radius: 13px;
+  padding: 12px;
+  background: transparent;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--muted);
+  margin: 3px 0;
+  transition: .2s;
+}
+
+.nav-btn:hover,
+.nav-btn.active {
+  color: white;
+  background: linear-gradient(100deg, #9e56ff25, #ff65d815);
+  border-color: #bd8cff35;
+}
+
+.nav-btn.active {
+  box-shadow: inset 3px 0 var(--pink);
+}
+
+.sidebar-bottom {
+  margin-top: auto;
+}
+
+.status-card {
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  padding: 13px;
+  background: #ffffff06;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #65ffb2;
+  box-shadow: 0 0 10px #65ffb2;
+  margin-right: 6px;
+}
+
+/* MAIN LAYOUT */
+
+.main {
+  margin-left: 245px;
+  padding: 25px clamp(15px, 3vw, 38px) 60px;
+  max-width: 1800px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 25px;
+}
+
+.breadcrumb {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pill {
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 8px 12px;
+  background: #ffffff07;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.menu-btn {
+  display: none;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  border-radius: 12px;
+  padding: 9px 12px;
+}
+
+/* PAGE SYSTEM */
+
+.page {
+  display: none;
+  animation: pageIn .3s ease;
+}
+
+.page.active {
+  display: block;
+}
+
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(7px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* SHARED COMPONENTS */
+
+.eyebrow {
+  color: var(--cyan);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+}
+
+h2 {
+  font-size: clamp(27px, 4vw, 42px);
+  margin: 9px 0 12px;
+  line-height: 1.15;
+}
+
+h3 {
+  margin-top: 0;
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, var(--pink), var(--purple), var(--cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 15px;
+  margin: 30px 0 17px;
+}
+
+.section-head h3 {
+  margin: 0 0 5px;
+}
+
+.section-head p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.panel {
+  border: 1px solid var(--border);
+  background: linear-gradient(145deg, #ffffff08, #ffffff03);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #ffffff08;
+  color: white;
+  transition: .2s;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--purple);
+  background: #a879ff19;
+}
+
+.btn.primary {
+  background: linear-gradient(100deg, #b74dff, #ed58c8);
+  border: 0;
+  box-shadow: 0 8px 25px #b74dff28;
+}
+
+.btn.cyan {
+  background: linear-gradient(100deg, #287eaa, #7157db);
+  border: 0;
+}
+
+.btn.danger {
+  border-color: #ff638555;
+  color: #ff9cb3;
+}
+
+.btn:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+input, select {
+  min-width: 0;
+  width: 100%;
+  color: white;
+  background: #0c0818;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+select option {
+  background: #151025;
+  color: white;
+}
+
+input::placeholder {
+  color: #837692;
+}
+
+label {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 7px;
+}
+
+.field {
+  min-width: 0;
+}
+
+.grid {
+  display: grid;
+  gap: 16px;
+}
+
+.toast {
+  position: fixed;
+  z-index: 100;
+  bottom: 20px;
+  right: 20px;
+  max-width: min(420px, calc(100% - 40px));
+  padding: 14px 17px;
+  border-radius: 14px;
+  background: #241537;
+  border: 1px solid #b879ff70;
+  box-shadow: 0 12px 40px #0007;
+  font-size: 13px;
+  display: none;
+}
+
+.toast.show {
+  display: block;
+  animation: pageIn .2s ease;
+}
+
+/* HOME PAGE */
+
+.hero {
+  min-height: 370px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 27px;
+  border: 1px solid #d58aff30;
+  padding: clamp(24px, 5vw, 54px);
+  background:
+    radial-gradient(ellipse at 85% 40%, #b54dff38, transparent 35%),
+    radial-gradient(ellipse at 70% 100%, #1ad7ff1c, transparent 40%),
+    linear-gradient(120deg, #21102f, #15102b 60%, #11162d);
+}
+
+.hero::after {
+  content: "✦";
+  position: absolute;
+  font-size: clamp(130px, 25vw, 280px);
+  color: #ffffff06;
+  right: 7%;
+  top: 5%;
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 620px;
+}
+
+.hero h2 {
+  font-size: clamp(37px, 6vw, 68px);
+  letter-spacing: -2px;
+  margin: 15px 0;
+}
+
+.hero p {
+  color: #d1c4e4;
+  line-height: 1.8;
+  max-width: 520px;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 25px;
+}
+
+.hero-decoration {
+  position: absolute;
+  right: 10%;
+  top: 23%;
+  width: 190px;
+  height: 190px;
+  border: 1px solid #dc9aff44;
+  border-radius: 50%;
+  box-shadow: 0 0 70px #a879ff18, inset 0 0 50px #a879ff12;
+  display: grid;
+  place-items: center;
+  font-size: 75px;
+  animation: float 6s ease-in-out infinite;
+}
+
+.hero-decoration::before,
+.hero-decoration::after {
+  content: "";
+  position: absolute;
+  inset: -17px;
+  border: 1px solid #65edff26;
+  border-radius: 50%;
+  transform: rotate(35deg) scaleX(.5);
+}
+
+.hero-decoration::after {
+  transform: rotate(-35deg) scaleX(.5);
+  border-color: #ff65d840;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-12px) rotate(3deg); }
+}
+
+.feature-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.feature-card {
+  padding: 19px;
+  border-radius: 18px;
+  background: #ffffff05;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: .2s;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  border-color: #c67cff75;
+  background: #a879ff0b;
+}
+
+.feature-icon {
+  font-size: 26px;
+  margin-bottom: 13px;
+}
+
+.feature-card h3 {
+  font-size: 14px;
+  margin: 0 0 7px;
+}
+
+.feature-card p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.category-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.category-card {
+  min-height: 125px;
+  position: relative;
+  overflow: hidden;
+  text-align: left;
+  padding: 18px;
+  border-radius: 17px;
+  border: 1px solid var(--border);
+  background: linear-gradient(140deg, #a879ff14, #ff65d80a);
+  color: white;
+}
+
+.category-card:hover {
+  border-color: var(--pink);
+  transform: translateY(-2px);
+}
+
+.category-card strong {
+  display: block;
+  margin-bottom: 7px;
+}
+
+.category-card span {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.category-card .big-icon {
+  position: absolute;
+  right: 13px;
+  bottom: 5px;
+  font-size: 43px;
+  opacity: .55;
+}
+
+/* MOD HUB */
+
+.filters {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.search-row {
+  display: flex;
+  gap: 10px;
+}
+
+.search-row input {
+  flex: 1;
+}
+
+.chip-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 12px 0;
+}
+
+.chip {
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 8px 12px;
+  font-size: 12px;
+  background: #ffffff06;
+  color: #d5c8e5;
+}
+
+.chip:hover,
+.chip.active {
+  border-color: var(--pink);
+  color: white;
+  background: #ff65d816;
+}
+
+.mod-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.mod-card {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid var(--border);
+  background: linear-gradient(150deg, #1d1430, #110d1f);
+  border-radius: 18px;
+  transition: .2s;
+}
+
+.mod-card:hover {
+  border-color: #a879ff75;
+  transform: translateY(-3px);
+}
+
+.mod-card img {
+  width: 54px;
+  height: 54px;
+  object-fit: cover;
+  border-radius: 14px;
+  background: #2c2041;
+}
+
+.mod-card-head {
+  display: flex;
+  gap: 12px;
+  padding: 15px 15px 8px;
+}
+
+.mod-card-head h3 {
+  font-size: 14px;
+  margin: 0 0 5px;
+  overflow-wrap: anywhere;
+}
+
+.mod-card-head p {
+  margin: 0;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.mod-description {
+  padding: 0 15px;
+  color: #b9accb;
+  font-size: 12px;
+  line-height: 1.6;
+  flex: 1;
+}
+
+.mod-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 12px 15px 0;
+}
+
+.tag {
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 4px 7px;
+  font-size: 10px;
+  color: #d4c2f5;
+}
+
+.mod-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  padding: 15px;
+}
+
+.mod-actions .btn {
+  flex: 1;
+  padding: 9px 7px;
+  font-size: 11px;
+}
+
+.results-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--muted);
+  margin: 15px 0;
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  padding: 35px 20px;
+  text-align: center;
+  border: 1px dashed var(--border);
+  border-radius: 18px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.loader {
+  width: 24px;
+  height: 24px;
+  border: 3px solid #ffffff25;
+  border-top-color: var(--pink);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+  margin: 15px auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* MODPACK */
+
+.pack-layout {
+  grid-template-columns: 1.3fr 1fr;
+  align-items: start;
+}
+
+.pack-list {
+  display: grid;
+  gap: 10px;
+}
+
+.pack-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #ffffff05;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.pack-item strong {
+  font-size: 13px;
+}
+
+.pack-item small {
+  display: block;
+  margin-top: 5px;
+  color: var(--muted);
+}
+
+.pack-item button {
+  flex-shrink: 0;
+}
+
+/* MEDIA */
+
+.media-layout {
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+}
+
+.media-box {
+  min-height: 250px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  background: #080610;
+  margin-top: 13px;
+}
+
+.media-box video,
+.media-box iframe {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  background: #080610;
+}
+
+.media-controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+/* SETTINGS */
+
+.settings-list {
+  display: grid;
+  gap: 12px;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 15px;
+  border-radius: 14px;
+  background: #ffffff05;
+  border: 1px solid var(--border);
+}
+
+.setting-row strong {
+  font-size: 13px;
+}
+
+.setting-row p {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.toggle {
+  appearance: none;
+  width: 45px;
+  height: 25px;
+  flex-shrink: 0;
+  background: #463b56;
+  border-radius: 99px;
+  position: relative;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.toggle::before {
+  content: "";
+  position: absolute;
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  background: white;
+  top: 3px;
+  left: 3px;
+  transition: .2s;
+}
+
+.toggle:checked {
+  background: linear-gradient(90deg, #9b5aff, #ff65d8);
+}
+
+.toggle:checked::before {
+  transform: translateX(20px);
+}
+
+/* EFFECTS */
+
+#effects {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  overflow: hidden;
+}
+
+.petal {
+  position: absolute;
+  top: -30px;
+  opacity: .7;
+  animation: fall linear forwards;
+  filter: drop-shadow(0 0 5px #ff65d855);
+}
+
+@keyframes fall {
+  to {
+    transform: translate3d(var(--drift), 110vh, 0) rotate(720deg);
+    opacity: .05;
+  }
+}
+
+footer {
+  margin-top: 45px;
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+footer a {
+  color: var(--cyan);
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1200px) {
+  .mod-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .feature-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hero-decoration {
+    right: 5%;
+    width: 140px;
+    height: 140px;
+    font-size: 55px;
+  }
+}
+
+@media (max-width: 850px) {
+  .sidebar {
+    transform: translateX(-105%);
+    transition: transform .25s;
+    box-shadow: 15px 0 50px #0008;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .main {
+    margin-left: 0;
+    padding: 18px 14px 45px;
+  }
+
+  .menu-btn {
+    display: inline-flex;
+  }
+
+  .hero-decoration {
+    opacity: .3;
+    right: -20px;
+  }
+
+  .category-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pack-layout,
+  .media-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .mod-grid,
+  .feature-grid,
+  .category-grid,
+  .filters {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    min-height: 340px;
+    padding: 25px 19px;
+  }
+
+  .hero h2 {
+    letter-spacing: -1px;
+  }
+
+  .hero-decoration {
+    width: 110px;
+    height: 110px;
+    font-size: 42px;
+    top: auto;
+    bottom: 18px;
+  }
+
+  .topbar-right .pill {
+    display: none;
+  }
+
+  .search-row {
+    flex-direction: column;
+  }
+
+  .section-head {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .mod-actions .btn {
+    flex-basis: 40%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+  <div id="effects" aria-hidden="true"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-icon">🌌</div>
+      <div>
+        <h1>NEON DREAMVERSE</h1>
+        <p>Enter another world</p>
+      </div>
+    </div>
+
+    <div class="nav-label">Universe</div>
+
+    <button class="nav-btn active" data-page="home">
+      <span>🏠</span> Home
+    </button>
+    <button class="nav-btn" data-page="mods">
+      <span>🔎</span> Mod Universe
+    </button>
+    <button class="nav-btn" data-page="pack">
+      <span>📦</span> Modpack Builder
+    </button>
+    <button class="nav-btn" data-page="media">
+      <span>🎧</span> Media Room
+    </button>
+
+    <div class="nav-label">Customize</div>
+
+    <button class="nav-btn" data-page="settings">
+      <span>⚙️</span> Settings
+    </button>
+
+    <div class="sidebar-bottom">
+      <div class="status-card">
+        <div style="font-size:12px;margin-bottom:8px">
+          <span class="status-dot"></span> Dreamverse Online
+        </div>
+        <div class="small muted">Minecraft Java Edition Mod Hub</div>
+        <div class="small muted" style="margin-top:8px">V2 · Dynamic Filters</div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="menu-btn" id="menuBtn" aria-label="Open navigation">☰</button>
+        <div>
+          <div class="breadcrumb" id="breadcrumb">Universe / Home</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <span class="pill">✦ Anime Fantasy</span>
+        <span class="pill">⛏ Minecraft Java</span>
+      </div>
+    </header>
+
+    <!-- HOME PAGE -->
+    <section class="page active" id="page-home">
+      <div class="hero">
+        <div class="hero-content">
+          <div class="eyebrow">✦ A new world awaits</div>
+          <h2>Welcome to<br><span class="gradient-text">Dreamverse.</span></h2>
+          <p>
+            Discover incredible Minecraft mods, build your dream modpack,
+            and explore a universe where fantasy meets technology.
+          </p>
+          <div class="hero-actions">
+            <button class="btn primary" data-goto="mods">✦ Explore Mods</button>
+            <button class="btn" data-goto="pack">📦 Build a Modpack</button>
+          </div>
+        </div>
+        <div class="hero-decoration" aria-hidden="true">🦋</div>
+      </div>
+
+      <div class="section-head">
+        <div>
+          <h3>Your Universe, Your Adventure</h3>
+          <p>Choose a world and discover mods for your next adventure.</p>
+        </div>
+      </div>
+
+      <div class="grid feature-grid">
+        <div class="feature-card" data-goto="mods">
+          <div class="feature-icon">🔎</div>
+          <h3>Smart Mod Search</h3>
+          <p>Search mods and explore their available versions and loaders.</p>
+        </div>
+        <div class="feature-card" data-goto="mods">
+          <div class="feature-icon">🔄</div>
+          <h3>Dynamic Filters</h3>
+          <p>Use version and loader data supplied by the selected mod.</p>
+        </div>
+        <div class="feature-card" data-goto="pack">
+          <div class="feature-icon">📦</div>
+          <h3>Modpack Builder</h3>
+          <p>Collect your selected mods and export a selection list.</p>
+        </div>
+        <div class="feature-card" data-goto="media">
+          <div class="feature-icon">🎧</div>
+          <h3>Media Room</h3>
+          <p>Play your own music files or open a supported video.</p>
+        </div>
+      </div>
+
+      <div class="section-head">
+        <div>
+          <h3>Choose Your Adventure</h3>
+          <p>Pick a category to search for related Minecraft mods.</p>
+        </div>
+      </div>
+
+      <div class="grid category-grid">
+        <button class="category-card" data-search="zombie apocalypse">
+          <strong>🧟 Zombie Apocalypse</strong>
+          <span>Survival · Horror · Infected worlds</span>
+          <span class="big-icon">☠️</span>
+        </button>
+        <button class="category-card" data-search="dinosaur">
+          <strong>🦖 Dinosaur Survival</strong>
+          <span>Dinosaurs · Creatures · Adventure</span>
+          <span class="big-icon">🌿</span>
+        </button>
+        <button class="category-card" data-search="fantasy RPG">
+          <strong>🧙 Fantasy RPG</strong>
+          <span>Magic · Dungeons · Kingdoms</span>
+          <span class="big-icon">🔮</span>
+        </button>
+        <button class="category-card" data-search="performance">
+          <strong>⚡ Performance</strong>
+          <span>Optimization · FPS · Smooth gameplay</span>
+          <span class="big-icon">✨</span>
+        </button>
+        <button class="category-card" data-search="building decoration">
+          <strong>🏰 Building</strong>
+          <span>Decorations · Structures · Furniture</span>
+          <span class="big-icon">🏯</span>
+        </button>
+        <button class="category-card" data-search="weapons combat">
+          <strong>⚔️ Combat</strong>
+          <span>Equipment · Combat · Adventure</span>
+          <span class="big-icon">🛡️</span>
+        </button>
+      </div>
+
+      <div class="section-head">
+        <div>
+          <h3>Explore Mod Sources</h3>
+          <p>Browse official mod platforms.</p>
+        </div>
+      </div>
+
+      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
+        <a class="panel" href="https://modrinth.com/mods" target="_blank" rel="noopener">
+          <div style="font-size:25px">🟩</div>
+          <h3 style="margin:12px 0 6px">Modrinth</h3>
+          <p class="muted small">Search and download supported mods.</p>
+          <span class="gradient-text">Open Modrinth ↗</span>
+        </a>
+        <a class="panel" href="https://www.curseforge.com/minecraft/search" target="_blank" rel="noopener">
+          <div style="font-size:25px">🟧</div>
+          <h3 style="margin:12px 0 6px">CurseForge</h3>
+          <p class="muted small">Browse Minecraft mods on CurseForge.</p>
+          <span class="gradient-text">Open CurseForge ↗</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- MOD SEARCH PAGE -->
+    <section class="page" id="page-mods">
+      <div class="eyebrow">MOD DISCOVERY ENGINE</div>
+      <h2>Mod <span class="gradient-text">Universe</span></h2>
+      <p class="muted">Search Minecraft mods, inspect their actual versions, and download compatible files.</p>
+
+      <div class="panel" style="margin-top:20px">
+        <div class="search-row">
+          <input id="searchInput" placeholder="Search mods... e.g. Create, Alex's Mobs">
+          <button class="btn primary" id="searchBtn">🔎 Search</button>
+        </div>
+
+        <div class="chip-row">
+          <button class="chip" data-query="zombie apocalypse">🧟 Zombie</button>
+          <button class="chip" data-query="dinosaur">🦖 Dinosaurs</button>
+          <button class="chip" data-query="fantasy RPG">🧙 Fantasy RPG</button>
+          <button class="chip" data-query="performance">⚡ Performance</button>
+          <button class="chip" data-query="building decoration">🏰 Building</button>
+          <button class="chip" data-query="weapons combat">⚔️ Combat</button>
+        </div>
+
+        <div class="filters">
+          <div class="field">
+            <label for="sourceFilter">Mod Source</label>
+            <select id="sourceFilter">
+              <option value="modrinth">Modrinth API</option>
+              <option value="curseforge">CurseForge Website</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="versionFilter">Minecraft Version</label>
+            <select id="versionFilter">
+              <option value="">Loading versions...</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="loaderFilter">Mod Loader</label>
+            <select id="loaderFilter">
+              <option value="">Loading loaders...</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="sortFilter">Sort Results</label>
+            <select id="sortFilter">
+              <option value="relevance">Relevance</option>
+              <option value="downloads">Most Downloaded</option>
+              <option value="follows">Most Followed</option>
+              <option value="updated">Recently Updated</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="selectedProjectInfo" class="small muted">
+          Choose a mod to load its available Minecraft versions and loaders.
+        </div>
+      </div>
+
+      <div class="results-info">
+        <span id="resultCount">Ready to search</span>
+        <span>Source: Modrinth API</span>
+      </div>
+
+      <div id="loadingState" class="hidden">
+        <div class="loader"></div>
+        <p class="muted small" style="text-align:center">Exploring the mod universe...</p>
+      </div>
+
+      <div id="modResults" class="grid mod-grid">
+        <div class="empty-state">
+          <div style="font-size:35px">🌌</div>
+          Enter a mod name or choose a category to begin.
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:center;margin-top:20px">
+        <button class="btn hidden" id="loadMoreBtn">Load More Mods</button>
+      </div>
+
+      <div class="panel" style="margin-top:25px">
+        <h3>About Compatibility</h3>
+        <p class="muted small" style="line-height:1.8">
+          Version and loader filters use Modrinth's published data.
+          A matching version does not guarantee every mod works on Android Java launchers.
+          Always check each mod's requirements and dependencies.
+        </p>
+      </div>
+    </section>
+
+    <!-- MODPACK PAGE -->
+    <section class="page" id="page-pack">
+      <div class="eyebrow">YOUR PERSONAL COLLECTION</div>
+      <h2>Modpack <span class="gradient-text">Builder</span></h2>
+      <p class="muted">Collect mods, review your choices, and export a JSON selection list.</p>
+
+      <div class="grid pack-layout" style="margin-top:22px">
+        <div class="panel">
+          <div class="section-head" style="margin-top:0">
+            <div>
+              <h3>Selected Mods</h3>
+              <p id="packCount">0 mods selected</p>
+            </div>
+            <button class="btn danger" id="clearPackBtn">Clear All</button>
+          </div>
+
+          <div id="packList" class="pack-list">
+            <div class="empty-state">Your collection is empty.<br>Find mods and press “Add to Pack”.</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Export Settings</h3>
+          <div class="field" style="margin-bottom:15px">
+            <label for="packName">Modpack Name</label>
+            <input id="packName" value="My Dreamverse Pack" maxlength="80">
+          </div>
+
+          <div class="field" style="margin-bottom:15px">
+            <label for="packVersion">Minecraft Version</label>
+            <select id="packVersion">
+              <option value="">Select version</option>
+            </select>
+          </div>
+
+          <div class="field" style="margin-bottom:18px">
+            <label for="packLoader">Mod Loader</label>
+            <select id="packLoader">
+              <option value="">Select loader</option>
+              <option>Fabric</option>
+              <option>Forge</option>
+              <option>NeoForge</option>
+              <option>Quilt</option>
+            </select>
+          </div>
+
+          <button class="btn primary" id="exportPackBtn" style="width:100%">
+            ⬇ Export JSON Selection
+          </button>
+
+          <p class="muted small" style="line-height:1.8;margin-top:15px">
+            Important: This export is a selection list, not an installable modpack ZIP.
+            It does not automatically download every mod or resolve dependencies.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- MEDIA PAGE -->
+    <section class="page" id="page-media">
+      <div class="eyebrow">YOUR PERSONAL SPACE</div>
+      <h2>Media <span class="gradient-text">Room</span></h2>
+      <p class="muted">Play a local music file or open a supported YouTube/video URL.</p>
+
+      <div class="grid media-layout" style="margin-top:22px">
+        <div class="panel">
+          <h3>🎧 Music Player</h3>
+          <p class="muted small">Choose an audio file stored on your device.</p>
+
+          <input id="musicFile" type="file" accept="audio/*">
+
+          <div class="media-box">
+            <div style="padding:30px;text-align:center">
+              <div style="font-size:45px">🎼</div>
+              <p id="musicStatus" class="muted small">No music selected</p>
+              <audio id="audioPlayer" controls style="width:100%;margin-top:15px"></audio>
+            </div>
+          </div>
+
+          <div class="media-controls">
+            <button class="btn" id="musicPlayBtn">▶ Play</button>
+            <button class="btn" id="musicPauseBtn">⏸ Pause</button>
+            <button class="btn" id="musicStopBtn">⏹ Stop</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>🎬 Video Player</h3>
+          <p class="muted small">Enter a YouTube URL or a direct video file URL.</p>
+
+          <div class="field">
+            <label for="videoUrl">Video URL</label>
+            <input id="videoUrl" placeholder="Paste a YouTube or video URL">
+          </div>
+
+          <div class="media-controls">
+            <button class="btn primary" id="loadVideoBtn">▶ Load Video</button>
+            <button class="btn" id="clearVideoBtn">Clear</button>
+          </div>
+
+          <div class="media-box" id="videoContainer">
+            <div style="padding:35px 15px;text-align:center;color:#b9accb">
+              <div style="font-size:45px">🌙</div>
+              Your video will appear here.
+            </div>
+          </div>
+
+          <p class="muted small" style="line-height:1.7">
+            Some videos cannot be embedded because of the provider's restrictions.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SETTINGS PAGE -->
+    <section class="page" id="page-settings">
+      <div class="eyebrow">MAKE IT YOURS</div>
+      <h2>Dreamverse <span class="gradient-text">Settings</span></h2>
+      <p class="muted">Customize the visual effects and website experience.</p>
+
+      <div class="panel" style="margin-top:22px">
+        <div class="settings-list">
+          <div class="setting-row">
+            <div>
+              <strong>🌸 Falling Petals</strong>
+              <p>Enable or disable the floating flower effect.</p>
+            </div>
+            <input class="toggle" type="checkbox" id="petalsToggle" checked>
+          </div>
+
+          <div class="setting-row">
+            <div>
+              <strong>✨ Magic Effects</strong>
+              <p>Enable or disable touch sparkle effects.</p>
+            </div>
+            <input class="toggle" type="checkbox" id="magicToggle" checked>
+          </div>
+
+          <div class="setting-row">
+            <div>
+              <strong>🎵 Remember Media Page</strong>
+              <p>Keep media controls available in this session.</p>
+            </div>
+            <input class="toggle" type="checkbox" id="mediaToggle" checked>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:18px">
+        <h3>API & Privacy</h3>
+        <p class="muted small" style="line-height:1.9">
+          Mod searches use the public Modrinth API.
+          Search terms are sent to Modrinth when you search.
+          This page does not ask for your Modrinth password or API key.
+          CurseForge's full API integration requires a separate secure backend.
+        </p>
+        <a class="btn" href="https://docs.modrinth.com/" target="_blank" rel="noopener">
+          Modrinth API Documentation ↗
+        </a>
+      </div>
+    </section>
+
+    <footer>
+      <span>🌌 NEON DREAMVERSE · Minecraft Java Mod Hub</span>
+      <span>
+        <a href="https://modrinth.com/mods" target="_blank" rel="noopener">Modrinth</a>
+        ·
+        <a href="https://www.curseforge.com/minecraft/search" target="_blank" rel="noopener">CurseForge</a>
+      </span>
+    </footer>
+  </main>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+
+/* ======================================
+   APP STATE
+====================================== */
+
+const API = "https://api.modrinth.com/v2";
+
+const state = {
+  page: "home",
+  query: "",
+  offset: 0,
+  limit: 12,
+  totalHits: 0,
+  loading: false,
+  selectedProject: null,
+  selectedProjectVersions: [],
+  pack: [],
+  allVersions: [],
+  allLoaders: [],
+  searchGeneration: 0,
+  petals: true,
+  magic: true,
+  media: true
+};
+
+const $ = id => document.getElementById(id);
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[char]);
+}
+
+function safeUrl(value) {
+  try {
+    const url = new URL(value);
+    return ["https:", "http:"].includes(url.protocol) ? url.href : "";
+  } catch {
+    return "";
+  }
+}
+
+function toast(message) {
+  const box = $("toast");
+  box.textContent = message;
+  box.classList.add("show");
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(() => box.classList.remove("show"), 3600);
+}
+
+async function apiGet(url) {
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error("API request failed (" + response.status + ")");
+  }
+
+  return response.json();
+}
+
+/* ======================================
+   PAGE NAVIGATION
+====================================== */
+
+const pageNames = {
+  home: "Home",
+  mods: "Mod Universe",
+  pack: "Modpack Builder",
+  media: "Media Room",
+  settings: "Settings"
+};
+
+function showPage(name) {
+  if (!pageNames[name]) return;
+
+  state.page = name;
+
+  document.querySelectorAll(".page").forEach(page => {
+    page.classList.toggle("active", page.id === "page-" + name);
+  });
+
+  document.querySelectorAll(".nav-btn").forEach(button => {
+    button.classList.toggle("active", button.dataset.page === name);
+  });
+
+  $("breadcrumb").textContent = "Universe / " + pageNames[name];
+  $("sidebar").classList.remove("open");
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+document.querySelectorAll("[data-page]").forEach(button => {
+  button.addEventListener("click", () => showPage(button.dataset.page));
+});
+
+document.querySelectorAll("[data-goto]").forEach(button => {
+  button.addEventListener("click", () => showPage(button.dataset.goto));
+});
+
+$("menuBtn").addEventListener("click", () => {
+  $("sidebar").classList.toggle("open");
+});
+
+document.querySelectorAll("[data-search]").forEach(button => {
+  button.addEventListener("click", () => runCategorySearch(button.dataset.search));
+});
+
+document.querySelectorAll("[data-query]").forEach(button => {
+  button.addEventListener("click", () => runCategorySearch(button.dataset.query));
+});
+
+/* ======================================
+   DYNAMIC GLOBAL VERSION & LOADER DATA
+====================================== */
+
+async function loadGlobalMetadata() {
+  const versionSelect = $("versionFilter");
+  const loaderSelect = $("loaderFilter");
+  const packVersion = $("packVersion");
+
+  try {
+    const [versions, loaders] = await Promise.all([
+      apiGet(API + "/tag/game_version"),
+      apiGet(API + "/tag/loader")
+    ]);
+
+    state.allVersions = versions
+      .filter(item => item.version)
+      .sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""));
+
+    state.allLoaders = loaders
+      .map(item => item.name)
+      .filter(Boolean);
+
+    fillSelect(versionSelect, state.allVersions.map(item => ({
+      value: item.version,
+      label: item.version
+    })), "All Minecraft Versions");
+
+    fillSelect(packVersion, state.allVersions.map(item => ({
+      value: item.version,
+      label: item.version
+    })), "Select Minecraft Version");
+
+    fillSelect(loaderSelect, state.allLoaders.map(name => ({
+      value: name,
+      label: name
+    })), "All Mod Loaders");
+
+    $("selectedProjectInfo").textContent =
+      "Global version and loader lists loaded from Modrinth. Select a mod to narrow them to its supported options.";
+
+  } catch (error) {
+    fillSelect(versionSelect, [], "Version list unavailable");
+    fillSelect(loaderSelect, [], "Loader list unavailable");
+    fillSelect(packVersion, [], "Version list unavailable");
+
+    $("selectedProjectInfo").textContent =
+      "Could not load version metadata. Check your internet connection and reload the page.";
+
+    console.error(error);
+  }
+}
+
+function fillSelect(select, items, placeholder, selectedValue = "") {
+  select.replaceChildren();
+
+  const first = document.createElement("option");
+  first.value = "";
+  first.textContent = placeholder;
+  select.appendChild(first);
+
+  for (const item of items) {
+    const option = document.createElement("option");
+    option.value = item.value;
+    option.textContent = item.label;
+    select.appendChild(option);
+  }
+
+  if (selectedValue && items.some(item => item.value === selectedValue)) {
+    select.value = selectedValue;
+  }
+}
+
+/* ======================================
+   MOD SEARCH
+====================================== */
+
+function buildSearchUrl(offset) {
+  const params = new URLSearchParams();
+
+  params.set("query", state.query || "");
+  params.set("limit", String(state.limit));
+  params.set("offset", String(offset));
+
+  const facets = [
+    ['project_type:mod']
+  ];
+
+  const version = $("versionFilter").value;
+  const loader = $("loaderFilter").value;
+
+  if (version) facets.push([`versions:${version}`]);
+  if (loader) facets.push([`categories:${loader.toLowerCase()}`]);
+
+  params.set("facets", JSON.stringify(facets));
+
+  const sort = $("sortFilter").value;
+  const sortMap = {
+    relevance: "relevance",
+    downloads: "downloads",
+    follows: "follows",
+    updated: "updated"
+  };
+
+  params.set("index", sortMap[sort] || "relevance");
+
+  return API + "/search?" + params.toString();
+}
+
+async function searchMods({ append = false } = {}) {
+  if (state.loading) return;
+
+  const generation = ++state.searchGeneration;
+  state.loading = true;
+
+  $("loadingState").classList.remove("hidden");
+  $("loadMoreBtn").classList.add("hidden");
+  $("resultCount").textContent = "Searching...";
+
+  if (!append) {
+    state.offset = 0;
+    $("modResults").replaceChildren();
+  }
+
+  try {
+    const data = await apiGet(buildSearchUrl(state.offset));
+
+    if (generation !== state.searchGeneration) return;
+
+    state.totalHits = data.total_hits || 0;
+
+    if (!append) $("modResults").replaceChildren();
+
+    const hits = Array.isArray(data.hits) ? data.hits : [];
+
+    if (!hits.length && !append) {
+      $("modResults").innerHTML =
+        '<div class="empty-state">🌙 No matching mods found.<br>Try another search term or clear one of the filters.</div>';
+    } else {
+      hits.forEach(renderModCard);
+    }
+
+    state.offset += hits.length;
+
+    $("resultCount").textContent =
+      `${Math.min(state.offset, state.totalHits)} of ${state.totalHits} mods`;
+
+    $("loadMoreBtn").classList.toggle(
+      "hidden",
+      state.offset >= state.totalHits || hits.length === 0
+    );
+
+  } catch (error) {
+    console.error(error);
+
+    if (!append) {
+      $("modResults").innerHTML =
+        '<div class="empty-state">⚠️ Could not load mods.<br>Check your internet connection and try again.</div>';
+    }
+
+    toast("Mod search failed. Please try again.");
+    $("resultCount").textContent = "Search unavailable";
+
+  } finally {
+    if (generation === state.searchGeneration) {
+      state.loading = false;
+      $("loadingState").classList.add("hidden");
+    }
+  }
+}
+
+function renderModCard(mod) {
+  const card = document.createElement("article");
+  card.className = "mod-card";
+
+  const icon = safeUrl(mod.icon_url) || "";
+  const title = escapeHTML(mod.title || mod.slug || "Untitled Mod");
+  const author = escapeHTML(mod.author || "Unknown author");
+  const description = escapeHTML(mod.description || "No description provided.");
+  const id = escapeHTML(mod.project_id || mod.id || "");
+  const downloads = Number(mod.downloads || 0).toLocaleString();
+
+  card.innerHTML = `
+    <div class="mod-card-head">
+      <img src="${icon || "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="}"
+           alt="" loading="lazy">
+      <div style="min-width:0">
+        <h3>${title}</h3>
+        <p>by ${author}</p>
+        <p style="margin-top:5px">⬇ ${downloads} downloads</p>
+      </div>
+    </div>
+    <p class="mod-description">${description}</p>
+    <div class="mod-tags">
+      ${(mod.categories || []).slice(0, 4).map(tag =>
+        `<span class="tag">${escapeHTML(tag)}</span>`
+      ).join("")}
+    </div>
+    <div class="mod-actions">
+      <button class="btn primary" data-download="${id}">⬇ Download</button>
+      <button class="btn" data-versions="${id}">Versions</button>
+      <button class="btn" data-add="${id}">＋ Pack</button>
+      <a class="btn" href="https://modrinth.com/mod/${encodeURIComponent(mod.slug || id)}"
+         target="_blank" rel="noopener">Details ↗</a>
+    </div>
+  `;
+
+  card.querySelector("[data-download]").addEventListener("click", () => {
+    selectProject(mod, { download: true });
+  });
+
+  card.querySelector("[data-versions]").addEventListener("click", () => {
+    selectProject(mod, { download: false });
+  });
+
+  card.querySelector("[data-add]").addEventListener("click", () => {
+    addToPack(mod);
+  });
+
+  $("modResults").appendChild(card);
+}
+
+async function runCategorySearch(query) {
+  $("searchInput").value = query;
+  state.query = query;
+  showPage("mods");
+  await searchMods();
+}
+
+$("searchBtn").addEventListener("click", () => {
+  state.query = $("searchInput").value.trim();
+  state.selectedProject = null;
+  resetProjectFilters();
+  searchMods();
+});
+
+$("searchInput").addEventListener("keydown", event => {
+  if (event.key === "Enter") $("searchBtn").click();
+});
+
+$("loadMoreBtn").addEventListener("click", () => {
+  searchMods({ append: true });
+});
+
+["versionFilter", "loaderFilter", "sortFilter"].forEach(id => {
+  $(id).addEventListener("change", () => {
+    state.selectedProject = null;
+    resetProjectFilters();
+    searchMods();
+  });
+});
+
+$("sourceFilter").addEventListener("change", () => {
+  const source = $("sourceFilter").value;
+
+  if (source === "curseforge") {
+    const query = $("searchInput").value.trim();
+
+    const target = new URL("https://www.curseforge.com/minecraft/search");
+    if (query) target.searchParams.set("search", query);
+
+    window.open(target.href, "_blank", "noopener");
+    $("sourceFilter").value = "modrinth";
+
+    toast("Opened CurseForge. Full in-site integration requires its API through a secure backend.");
+  }
+});
+
+function resetProjectFilters() {
+  const version = $("versionFilter");
+  const loader = $("loaderFilter");
+
+  const previousVersion = version.value;
+  const previousLoader = loader.value;
+
+  fillSelect(version, state.allVersions.map(item => ({
+    value: item.version,
+    label: item.version
+  })), "All Minecraft Versions", previousVersion);
+
+  fillSelect(loader, state.allLoaders.map(name => ({
+    value: name,
+    label: name
+  })), "All Mod Loaders", previousLoader);
+
+  $("selectedProjectInfo").textContent =
+    "Showing global Modrinth filters. Select a specific mod to see its available versions and loaders.";
+}
+
+/* ======================================
+   SELECTED MOD: DYNAMIC VERSION FILTERS
+====================================== */
+
+async function selectProject(mod, options = {}) {
+  const projectId = mod.project_id || mod.id;
+
+  if (!projectId) {
+    toast("This project does not have a valid ID.");
+    return;
+  }
+
+  state.selectedProject = mod;
+  state.selectedProjectVersions = [];
+
+  $("selectedProjectInfo").textContent =
+    `Loading available versions for ${mod.title || mod.slug || "selected mod"}...`;
+
+  showPage("mods");
+
+  try {
+    const versions = await apiGet(
+      API + "/project/" + encodeURIComponent(projectId) + "/version"
+    );
+
+    state.selectedProjectVersions = Array.isArray(versions) ? versions : [];
+
+    const versionSet = new Set();
+    const loaderSet = new Set();
+
+    for (const version of state.selectedProjectVersions) {
+      (version.game_versions || []).forEach(v => versionSet.add(v));
+      (version.loaders || []).forEach(loader => loaderSet.add(loader));
+    }
+
+    const projectVersions = state.allVersions
+      .filter(item => versionSet.has(item.version))
+      .map(item => ({ value: item.version, label: item.version }));
+
+    for (const version of versionSet) {
+      if (!projectVersions.some(item => item.value === version)) {
+        projectVersions.push({ value: version, label: version });
+      }
+    }
+
+    projectVersions.sort((a, b) => b.label.localeCompare(a.label, undefined, {
+      numeric: true
+    }));
+
+    const projectLoaders = [...loaderSet]
+      .sort((a, b) => a.localeCompare(b))
+      .map(loader => ({ value: loader, label: loader }));
+
+    fillSelect(
+      $("versionFilter"),
+      projectVersions,
+      "All versions of this mod"
+    );
+
+    fillSelect(
+      $("loaderFilter"),
+      projectLoaders,
+      "All loaders of this mod"
+    );
+
+    const currentVersion = $("versionFilter");
+    const currentLoader = $("loaderFilter");
+
+    currentVersion.disabled = false;
+    currentLoader.disabled = false;
+
+    $("selectedProjectInfo").textContent =
+      `${mod.title || mod.slug}: ${projectVersions.length} available Minecraft versions · ${projectLoaders.length} available loaders. Select filters and download a compatible file.`;
+
+    toast("Filters updated for " + (mod.title || "this mod") + ".");
+
+    if (options.download) {
+      await downloadSelectedMod();
+    }
+
+  } catch (error) {
+    console.error(error);
+
+    $("selectedProjectInfo").textContent =
+      "Could not load this mod's version list. Check your connection and try again.";
+
+    toast("Unable to load this mod's versions.");
+  }
+}
+
+function getCompatibleVersions() {
+  const selectedGameVersion = $("versionFilter").value;
+  const selectedLoader = $("loaderFilter").value.toLowerCase();
+
+  return state.selectedProjectVersions.filter(version => {
+    const gameVersions = version.game_versions || [];
+    const loaders = (version.loaders || []).map(item => item.toLowerCase());
+
+    const versionMatches =
+      !selectedGameVersion || gameVersions.includes(selectedGameVersion);
+
+    const loaderMatches =
+      !selectedLoader || loaders.includes(selectedLoader);
+
+    return versionMatches && loaderMatches;
+  });
+}
+
+/* ======================================
+   DOWNLOAD MOD FILE
+====================================== */
+
+async function downloadSelectedMod() {
+  if (!state.selectedProject) {
+    toast("Choose a mod first.");
+    return;
+  }
+
+  let versions = getCompatibleVersions();
+
+  // If the user chose a filter combination with no results, do not
+  // silently download a file for a different version or loader.
+  if (!versions.length) {
+    toast("No published version matches the selected Minecraft version and loader.");
+    return;
+  }
+
+  // The API response is normally ordered newest first.
+  const selectedVersion = versions[0];
+
+  const files = selectedVersion.files || [];
+
+  const file = files.find(item =>
+    item.primary && /\.jar$/i.test(item.filename || "")
+  ) || files.find(item => /\.jar$/i.test(item.filename || ""));
+
+  if (!file || !safeUrl(file.url)) {
+    toast("No downloadable JAR file was found for this version.");
+    return;
+  }
+
+  const versionLabel = selectedVersion.version_number || selectedVersion.name || "latest";
+  const filename = file.filename || "mod.jar";
+
+  const confirmed = confirm(
+    "Download this Modrinth file?\n\n" +
+    "Mod: " + (state.selectedProject.title || state.selectedProject.slug) + "\n" +
+    "Mod version: " + versionLabel + "\n" +
+    "File: " + filename + "\n\n" +
+    "Check that its Minecraft version and loader match your installation."
+  );
+
+  if (!confirmed) return;
+
+  const link = document.createElement("a");
+  link.href = file.url;
+  link.download = filename;
+  link.rel = "noopener";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+
+  toast("Download requested: " + filename);
+}
+
+document.addEventListener("click", event => {
+  const button = event.target.closest("[data-download]");
+  if (!button) return;
+
+  // Cards select their own mod before invoking the download handler.
+});
+
+ /* The Versions button loads the dynamic filters. The Download button
+    selects the mod first, then downloads the matching published JAR. */
+
+/* ======================================
+   MODPACK BUILDER
+====================================== */
+
+function addToPack(mod) {
+  const id = mod.project_id || mod.id;
+
+  if (!id) return;
+
+  if (state.pack.some(item => item.id === id)) {
+    toast("This mod is already in your pack.");
+    return;
+  }
+
+  state.pack.push({
+    id,
+    title: mod.title || mod.slug || "Minecraft Mod",
+    slug: mod.slug || "",
+    source: "Modrinth",
+    url: "https://modrinth.com/mod/" + encodeURIComponent(mod.slug || id)
+  });
+
+  renderPack();
+  toast("Added to your modpack selection.");
+}
+
+function removeFromPack(id) {
+  state.pack = state.pack.filter(item => item.id !== id);
+  renderPack();
+}
+
+function renderPack() {
+  $("packCount").textContent =
+    state.pack.length + (state.pack.length === 1 ? " mod selected" : " mods selected");
+
+  if (!state.pack.length) {
+    $("packList").innerHTML =
+      '<div class="empty-state">Your collection is empty.<br>Find mods and press “Add to Pack”.</div>';
+    return;
+  }
+
+  $("packList").innerHTML = state.pack.map(item => `
+    <div class="pack-item">
+      <div style="min-width:0">
+        <strong>${escapeHTML(item.title)}</strong>
+        <small>${escapeHTML(item.source)} · ${escapeHTML(item.id)}</small>
+      </div>
+      <button class="btn danger" data-remove="${escapeHTML(item.id)}">Remove</button>
+    </div>
+  `).join("");
+
+  $("packList").querySelectorAll("[data-remove]").forEach(button => {
+    button.addEventListener("click", () => removeFromPack(button.dataset.remove));
+  });
+}
+
+$("clearPackBtn").addEventListener("click", () => {
+  if (!state.pack.length) return;
+
+  if (confirm("Clear all selected mods?")) {
+    state.pack = [];
+    renderPack();
+  }
+});
+
+$("exportPackBtn").addEventListener("click", () => {
+  const packName = $("packName").value.trim() || "My Dreamverse Pack";
+
+  const data = {
+    format: "neon-dreamverse-selection",
+    format_version: 1,
+    name: packName,
+    minecraft_version: $("packVersion").value || null,
+    loader: $("packLoader").value || null,
+    created_at: new Date().toISOString(),
+    installable: false,
+    note: "This is a mod selection list, not an installable ZIP. Check mod compatibility, dependencies and download each file from its source.",
+    mods: state.pack
+  };
+
+  const blob = new Blob(
+    [JSON.stringify(data, null, 2)],
+    { type: "application/json" }
+  );
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = packName.replace(/[^a-z0-9_-]+/gi, "_") + ".json";
+
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  toast("JSON selection list exported.");
+});
+
+/* ======================================
+   MEDIA ROOM
+====================================== */
+
+let musicObjectUrl = null;
+
+$("musicFile").addEventListener("change", () => {
+  const file = $("musicFile").files && $("musicFile").files[0];
+
+  if (!file) return;
+
+  if (musicObjectUrl) URL.revokeObjectURL(musicObjectUrl);
+
+  musicObjectUrl = URL.createObjectURL(file);
+  $("audioPlayer").src = musicObjectUrl;
+  $("musicStatus").textContent = file.name;
+});
+
+$("musicPlayBtn").addEventListener("click", async () => {
+  try {
+    if (!$("audioPlayer").src) {
+      toast("Choose a music file first.");
+      return;
+    }
+
+    await $("audioPlayer").play();
+  } catch {
+    toast("The selected audio file could not be played.");
+  }
+});
+
+$("musicPauseBtn").addEventListener("click", () => {
+  $("audioPlayer").pause();
+});
+
+$("musicStopBtn").addEventListener("click", () => {
+  $("audioPlayer").pause();
+  $("audioPlayer").currentTime = 0;
+});
+
+function youtubeEmbedUrl(rawUrl) {
+  try {
+    const url = new URL(rawUrl);
+    let id = "";
+
+    if (url.hostname === "youtu.be") {
+      id = url.pathname.split("/").filter(Boolean)[0] || "";
+    } else if (
+      url.hostname.endsWith("youtube.com") ||
+      url.hostname.endsWith("youtube-nocookie.com")
+    ) {
+      if (url.pathname === "/watch") {
+        id = url.searchParams.get("v") || "";
+      } else if (url.pathname.startsWith("/embed/")) {
+        id = url.pathname.split("/")[2] || "";
+      } else if (url.pathname.startsWith("/shorts/")) {
+        id = url.pathname.split("/")[2] || "";
+      }
+    }
+
+    if (!/^[a-zA-Z0-9_-]{11}$/.test(id)) return "";
+    return "https://www.youtube-nocookie.com/embed/" + id;
+  } catch {
+    return "";
+  }
+}
+
+$("loadVideoBtn").addEventListener("click", () => {
+  const raw = $("videoUrl").value.trim();
+  const url = safeUrl(raw);
+
+  if (!url) {
+    toast("Enter a valid HTTP or HTTPS video URL.");
+    return;
+  }
+
+  const embed = youtubeEmbedUrl(url);
+  const container = $("videoContainer");
+
+  if (embed) {
+    container.innerHTML = `
+      <iframe
+        src="${escapeHTML(embed)}"
+        title="YouTube video"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+        referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    `;
+    return;
+  }
+
+  if (/\.(mp4|webm|ogg)(\?.*)?$/i.test(url)) {
+    container.innerHTML = `
+      <video controls playsinline>
+        <source src="${escapeHTML(url)}">
+        Your browser cannot play this video.
+      </video>
+    `;
+    return;
+  }
+
+  toast("This URL is not a recognized YouTube link or direct MP4/WebM/OGG file.");
+});
+
+$("clearVideoBtn").addEventListener("click", () => {
+  $("videoUrl").value = "";
+  $("videoContainer").innerHTML = `
+    <div style="padding:35px 15px;text-align:center;color:#b9accb">
+      <div style="font-size:45px">🌙</div>
+      Your video will appear here.
+    </div>
+  `;
+});
+
+/* ======================================
+   SETTINGS & ANIMATIONS
+====================================== */
+
+$("petalsToggle").addEventListener("change", event => {
+  state.petals = event.target.checked;
+
+  if (!state.petals) {
+    $("effects").querySelectorAll(".petal").forEach(item => item.remove());
+  }
+});
+
+$("magicToggle").addEventListener("change", event => {
+  state.magic = event.target.checked;
+});
+
+$("mediaToggle").addEventListener("change", event => {
+  state.media = event.target.checked;
+  toast(state.media
+    ? "Media Room is enabled."
+    : "Media controls remain available on the Media Room page.");
+});
+
+let lastPetalTime = 0;
+
+function createPetal() {
+  if (!state.petals || document.hidden) return;
+
+  const now = Date.now();
+  if (now - lastPetalTime < 700) return;
+  lastPetalTime = now;
+
+  const petal = document.createElement("span");
+  petal.className = "petal";
+  petal.textContent = ["✿", "❀", "✧", "🌸"][Math.floor(Math.random() * 4)];
+
+  petal.style.left = Math.random() * 100 + "vw";
+  petal.style.fontSize = (10 + Math.random() * 12) + "px";
+  petal.style.setProperty("--drift", (Math.random() * 150 - 75) + "px");
+  petal.style.animationDuration = (7 + Math.random() * 8) + "s";
+
+  $("effects").appendChild(petal);
+
+  setTimeout(() => petal.remove(), 16000);
+}
+
+setInterval(createPetal, 500);
+
+document.addEventListener("pointerdown", event => {
+  if (!state.magic) return;
+  if (event.target.closest("button, a, input, select, textarea")) return;
+
+  const spark = document.createElement("span");
+  spark.textContent = "✦";
+  spark.style.position = "fixed";
+  spark.style.left = event.clientX + "px";
+  spark.style.top = event.clientY + "px";
+  spark.style.zIndex = "60";
+  spark.style.color = Math.random() > .5 ? "#ff65d8" : "#65edff";
+  spark.style.pointerEvents = "none";
+  spark.style.fontSize = "18px";
+  spark.style.transition = "all .6s ease";
+  document.body.appendChild(spark);
+
+  requestAnimationFrame(() => {
+    spark.style.transform = "translateY(-25px) scale(1.7)";
+    spark.style.opacity = "0";
+  });
+
+  setTimeout(() => spark.remove(), 650);
+});
+
+/* ======================================
+   INITIALIZE
+====================================== */
+
+renderPack();
+loadGlobalMetadata();
+</script>
+</body>
+  </html>
